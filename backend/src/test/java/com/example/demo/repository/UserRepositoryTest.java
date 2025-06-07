@@ -1,0 +1,27 @@
+package com.example.demo.repository;
+
+import com.example.demo.entity.User;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
+class UserRepositoryTest {
+
+    @Autowired UserRepository repo;
+
+    @Test
+    void searchByEmail() {
+        User u = new User(); u.setEmail("ali@mail.com"); u.setPassword("123");
+        repo.save(u);
+
+        assertThat(repo.findByEmail("ali@mail.com")).isEqualTo(u);
+        assertThat(repo.findByEmailAndPassword("ali@mail.com", "123")).isEqualTo(u);
+    }
+}
